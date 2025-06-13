@@ -6,6 +6,6 @@ public class RecordResponseDto
     public LanguageDto Language { get; set; }
     public StudentDto Student { get; set; }
     public TaskTodoDtoFull Task { get; set; }
-    public double ExecutionTime { get; set; }
+    public string ExecutionTime { get; set; }
     public string Created { get; set; }
 }

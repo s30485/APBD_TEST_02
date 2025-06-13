@@ -4,6 +4,8 @@ using APBD_TEST_02.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+namespace APBD_TEST_02.API.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class RecordsController : ControllerBase
@@ -15,7 +17,6 @@ public class RecordsController : ControllerBase
         _context = context;
     }
 
-    // GET: api/records
     [HttpGet]
     public async Task<ActionResult<IEnumerable<RecordResponseDto>>> GetRecords(
         [FromQuery] DateTime? fromDate,
@@ -25,7 +26,7 @@ public class RecordsController : ControllerBase
         var query = _context.Records
             .Include(r => r.Language)
             .Include(r => r.Student)
-            .Include(r => r.TaskTodo)  // changed here
+            .Include(r => r.TaskTodo)
             .AsQueryable();
 
         if (fromDate.HasValue)
@@ -35,7 +36,7 @@ public class RecordsController : ControllerBase
             query = query.Where(r => r.LanguageId == languageId.Value);
 
         if (taskId.HasValue)
-            query = query.Where(r => r.TaskId == taskId.Value);  // changed here
+            query = query.Where(r => r.TaskId == taskId.Value);
 
         var records = await query
             .OrderByDescending(r => r.CreatedAt)
@@ -57,7 +58,7 @@ public class RecordsController : ControllerBase
                     LastName = r.Student.LastName,
                     Email = r.Student.Email
                 },
-                Task = new TaskTodoDtoFull  // kept DTO same assuming it matches TaskTodo entity
+                Task = new TaskTodoDtoFull
                 {
                     Id = r.TaskTodo.Id,
                     Name = r.TaskTodo.Name,
@@ -68,79 +69,85 @@ public class RecordsController : ControllerBase
 
         return Ok(records);
     }
-
-    // POST: api/records
+    
     [HttpPost]
-public async Task<ActionResult<RecordResponseDto>> CreateRecord(CreateRecordRequestDto dto)
-{
-    var language = await _context.Languages.FindAsync(dto.LanguageId);
-    if (language == null)
-        return NotFound($"Language with ID {dto.LanguageId} not found.");
-
-    var student = await _context.Students.FindAsync(dto.StudentId);
-    if (student == null)
-        return NotFound($"Student with ID {dto.StudentId} not found.");
-
-    TaskTodo? taskTodo = null;
-
-    if (dto.TaskId.HasValue)
+    public async Task<ActionResult<RecordResponseDto>> CreateRecord([FromBody] CreateRecordRequestDto dto)
     {
-        taskTodo = await _context.Tasks.FindAsync(dto.TaskId.Value);
-        if (taskTodo == null)
-            return NotFound($"TaskTodo with ID {dto.TaskId.Value} not found.");
-    }
-    else if (!string.IsNullOrWhiteSpace(dto.TaskName) && !string.IsNullOrWhiteSpace(dto.TaskDescription))
-    {
-        taskTodo = new TaskTodo
+        var language = await _context.Languages.FindAsync(dto.LanguageId);
+        if (language == null)
+            return NotFound($"Language with ID {dto.LanguageId} not found.");
+
+        var student = await _context.Students.FindAsync(dto.StudentId);
+        if (student == null)
+            return NotFound($"Student with ID {dto.StudentId} not found.");
+
+        TaskTodo? taskTodo = null;
+
+        if (dto.TaskId.HasValue)
         {
-            Name = dto.TaskName,
-            Description = dto.TaskDescription
-        };
-        _context.Tasks.Add(taskTodo);
-        await _context.SaveChangesAsync();
-    }
-    else
-    {
-        return BadRequest("Either TaskId or TaskName and TaskDescription must be provided.");
-    }
-
-    var record = new Record
-    {
-        ExecutionTime = dto.ExecutionTime,
-        CreatedAt = dto.CreatedAt,
-        LanguageId = language.Id,
-        StudentId = student.Id,
-        TaskId = taskTodo.Id
-    };
-
-    _context.Records.Add(record);
-    await _context.SaveChangesAsync();
-
-    var response = new RecordResponseDto
-    {
-        Id = record.Id,
-        ExecutionTime = record.ExecutionTime,
-        Created = record.CreatedAt.ToString("MM/dd/yyyy HH:mm:ss"),
-        Language = new LanguageDto
-        {
-            Id = language.Id,
-            Name = language.Name
-        },
-        Student = new StudentDto
-        {
-            Id = student.Id,
-            FirstName = student.FirstName,
-            LastName = student.LastName,
-            Email = student.Email
-        },
-        Task = new TaskTodoDtoFull
-        {
-            Id = taskTodo.Id,
-            Name = taskTodo.Name,
-            Description = taskTodo.Description
+            taskTodo = await _context.Tasks.FindAsync(dto.TaskId.Value);
+            if (taskTodo == null)
+                return NotFound($"TaskTodo with ID {dto.TaskId.Value} not found.");
         }
-    };
+        else if (dto.Task != null &&
+                 !string.IsNullOrWhiteSpace(dto.Task.Name) &&
+                 !string.IsNullOrWhiteSpace(dto.Task.Description))
+        {
+            taskTodo = new TaskTodo
+            {
+                Name = dto.Task.Name,
+                Description = dto.Task.Description
+            };
+            _context.Tasks.Add(taskTodo);
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            return BadRequest("Either TaskId or Task (name & description) must be provided.");
+        }
 
-    return CreatedAtAction(nameof(GetRecords), new { id = record.Id }, response);
-}
+        if (!DateTime.TryParse(dto.Created, out var createdAt))
+        {
+            return BadRequest("Invalid date format. Use 'MM/dd/yyyy HH:mm:ss'.");
+        }
+
+        var record = new Record
+        {
+            ExecutionTime = dto.Created,
+            CreatedAt = createdAt,
+            LanguageId = language.Id,
+            StudentId = student.Id,
+            TaskId = taskTodo.Id
+        };
+
+        _context.Records.Add(record);
+        await _context.SaveChangesAsync();
+
+        var response = new RecordResponseDto
+        {
+            Id = record.Id,
+            ExecutionTime = record.ExecutionTime,
+            Created = record.CreatedAt.ToString("MM/dd/yyyy HH:mm:ss"),
+            Language = new LanguageDto
+            {
+                Id = language.Id,
+                Name = language.Name
+            },
+            Student = new StudentDto
+            {
+                Id = student.Id,
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                Email = student.Email
+            },
+            Task = new TaskTodoDtoFull
+            {
+                Id = taskTodo.Id,
+                Name = taskTodo.Name,
+                Description = taskTodo.Description
+            }
+        };
+
+        return CreatedAtAction(nameof(GetRecords), new { id = record.Id }, response);
+    }
 }

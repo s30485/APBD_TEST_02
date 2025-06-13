@@ -5,7 +5,7 @@ namespace APBD_TEST_02.API.Models;
 public class Record
 {
     public int Id { get; set; }
-    public long ExecutionTime { get; set; }
+    public string ExecutionTime { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public int TaskId { get; set; }
