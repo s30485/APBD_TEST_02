@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APBD_TEST_02.Models", "src\APBD_TEST_02.Models\APBD_TEST_02.Models.csproj", "{8FA88F92-8145-4947-8422-C97EA508738E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APBD_TEST_02.API", "src\APBD_TEST_02.API\APBD_TEST_02.API.csproj", "{474D8AA1-CEB0-4B0D-9F93-1F64F7F103AB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8FA88F92-8145-4947-8422-C97EA508738E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FA88F92-8145-4947-8422-C97EA508738E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FA88F92-8145-4947-8422-C97EA508738E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FA88F92-8145-4947-8422-C97EA508738E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{474D8AA1-CEB0-4B0D-9F93-1F64F7F103AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{474D8AA1-CEB0-4B0D-9F93-1F64F7F103AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{474D8AA1-CEB0-4B0D-9F93-1F64F7F103AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{474D8AA1-CEB0-4B0D-9F93-1F64F7F103AB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
