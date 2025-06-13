@@ -1,4 +1,6 @@
-﻿namespace APBD_TEST_02.Models.Models;
+﻿using APBD_TEST_02.API.Models;
+
+namespace APBD_TEST_02.Models.Models;
 
 public class Student
 {

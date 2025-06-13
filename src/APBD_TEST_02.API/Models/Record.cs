@@ -1,4 +1,6 @@
-﻿namespace APBD_TEST_02.Models.Models;
+﻿using APBD_TEST_02.Models.Models;
+
+namespace APBD_TEST_02.API.Models;
 
 public class Record
 {
@@ -7,7 +9,7 @@ public class Record
     public DateTime CreatedAt { get; set; }
 
     public int TaskId { get; set; }
-    public Task Task { get; set; }
+    public TaskTodo TaskTodo { get; set; }
 
     public int LanguageId { get; set; }
     public Language Language { get; set; }

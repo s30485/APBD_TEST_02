@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "language": {
+      "id": 1,
+      "name": "C#"
+    },
+    "task": {
+      "id": 1,
+      "name": "Fizz-Buzz",
+      "description": "Test description"
+    },
+    "student": {
+      "id": 1,
+      "firstName": "Adam",
+      "lastName": "Miller",
+      "email": "adam.miller@mail.com"
+    },
+    "executionTime": 12.33,
+    "created": "05/29/2015 05:50:06"
+  }
+]

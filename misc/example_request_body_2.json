@@ -1,0 +1,10 @@
+{
+  "languageId": 1,
+  "studentId": 1,
+  "task": {
+    "name": "new task",
+    "description": "some description"
+  },
+  "executionTime": 12.33,
+  "created": "05/29/2015 05:50:06"
+}
